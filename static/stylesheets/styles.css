@@ -1,0 +1,41 @@
+/*CSS reset*/
+* {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	font-family: arial, sans serif;
+}
+
+#wrapper {
+	width: 1000px;
+	padding-left: 10px;
+	margin: 0 auto;
+}
+
+#left_content {
+	width: 600px;
+	margin-top: 20px;
+	position: relative;
+}
+
+#right_content {
+	width: 300px;
+	vertical-align: top;
+}
+
+#left_content, #right_content {
+	display: inline-block;
+}
+
+#reset {
+	margin: 20px 0 0 75px;
+}
+
+#start {
+	position: absolute;
+	top: 39%;
+	left: 45%;
+	z-index: 100;
+}

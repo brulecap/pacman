@@ -1,0 +1,131 @@
+/* CSS for bricks  and pacman creatures*/
+#game_area, .remote {
+	margin: 0 auto;
+	font-size: 0;
+	background-color: black;
+}
+
+#game_area {
+	position: relative;
+}
+
+.game_row div {
+	display: inline-block;
+}
+
+.top {
+	border-top: 2px solid blue;
+}
+
+.bottom {
+	border-bottom: 2px solid blue;
+}
+
+.left_border {
+	border-left: 2px solid blue;
+}
+
+.right_border {
+	border-right: 2px solid blue;
+}
+
+.left_top {
+	border-top-left-radius: 10px;
+}
+
+.right_top {
+	border-top-right-radius: 10px;
+}
+
+.left_bottom {
+	border-bottom-left-radius: 10px;
+}
+
+.right_bottom {
+	border-bottom-right-radius: 10px;
+}
+
+.brick {
+	box-sizing: border-box;
+}
+
+.energizer, .point {
+	background: url("../images/dot.png") no-repeat center;
+}
+
+.energizer {
+	animation-name: flash;
+	animation-duration: 2s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+}
+
+.point {
+	background-size: 20%;
+}
+
+.energizer {
+	background-size: 70%;
+}
+
+@keyframes flash {  
+	0% { opacity: 1.0; }
+	50% { opacity: 0.5; }
+	100% { opacity: 1.0; }
+}
+
+.blank {
+	background-color: black;
+}
+
+.door {
+	background-color: white;
+	opacity: 0.5;
+}
+
+.background {
+	opacity:0.5;
+	z-index: -1;
+}
+
+.pacman {
+	background: url("../images/pacman.gif") no-repeat center;
+	background-size: cover;
+}
+
+.pacman1 {
+	background: url("../images/pacman.gif") no-repeat center;
+	background-size: cover;
+}
+
+.down {
+	transform: rotate(90deg);
+}
+
+.left {
+	transform: rotate(180deg);
+}
+
+.up {
+	transform: rotate(-90deg);
+}
+
+.pinky {
+	background: url("../images/pinky.gif") no-repeat center;
+	background-size: cover;
+}
+
+.blinky {
+	background: url("../images/blinky.gif") no-repeat center;
+	background-size: cover;
+}
+
+.clyde {
+	background: url("../images/clyde.gif") no-repeat center;
+	background-size: cover;
+}
+
+.inky {
+	background: url("../images/inky.gif") no-repeat center;
+	background-size: cover;
+}
