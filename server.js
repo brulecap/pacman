@@ -12,10 +12,10 @@ app.use(express.static(__dirname + "/static"));
 app.get("/", function (request, response){
 	response.render('index');
 })
-const users = {};
-// Start Node server listening on port 8000.
-var server = app.listen(8000, function() {
-	console.log("Listening");
+const users = [];
+// Start Node server listening on port 8001.
+var server = app.listen(process.env.PORT || 8000, function() {
+	console.log(process.env.PORT || 8000);
 });
 var io = require('socket.io').listen(server);
 io.sockets.on("connection", function (socket) {
@@ -27,7 +27,7 @@ io.sockets.on("connection", function (socket) {
 		// Not sure if this is the best way, but I am going to
 		// send all of the users and let the client update
 		// appropriately. 
-		users[socket.id] = socket.id;
+		users.push({id:socket.id, name:data.name});
 		io.emit('player_update', {users:users});
 	})
 	socket.on("moved", function(data) {
@@ -35,8 +35,16 @@ io.sockets.on("connection", function (socket) {
 	})
 	socket.on("disconnect", function (data) {
 		io.emit('remove_user', {id:socket.id});
-		delete users[socket.id];
+		for (let i=0;i<users.length;i++) {
+			if (users.id === socket.id) {
+				console.log("Found remove", users, i);
+				users.splice(i, 1);
+			}
+		}
 	})
+	/*
+		Not imlemented or tested.
+	*/
 	socket.on("send_message", function (data) {
 		if (messages.length > max_messages) {
 			// FIFO list. Take first one off the list.

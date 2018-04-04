@@ -5,8 +5,12 @@ const right_key = 39;
 const game_id = "game_area";
 
 var socket;
-var done = true;
+var game_on = false;
+var name= "";
 
+function emit_to_server(action, message) {
+	socket.emit(action, message);
+}
 
 
 $(document).ready(function(){
@@ -16,21 +20,10 @@ $(document).ready(function(){
 	for (var key in ghost_info) {
 		pacman.ghost_objects[key] = new Ghost(pacman.board, key, pacman);
 	}
-	console.log(pacman.ghost_objects);
 
-//	let ghost_creation = setInterval(createGhost, 3000);
-//	function createGhost() {
-//		if (ghosts.length > 0) {
-//			let ghost = ghosts.shift();
-//			pacman.ghost_objects[ghost] = new Ghost(pacman.board, ghost, pacman);
-//		} else {
-//			clearTimeout(ghost_creation);
-//		}
-//	}
-	socket = connect_to_server(game_id);
+	socket = connect_to_server();
 	// Tell server new player joined
-	socket.emit("add_new_player");
-
+//	socket.emit("add_new_player");
 
 
 	$(document).keydown(function(e) {
@@ -46,25 +39,37 @@ $(document).ready(function(){
 		}
 		if (direction) {
 			e.preventDefault();
-			if (!pacman.done) {
+			if (!pacman.done && game_on) {
 				pacman.move(direction);
 			}
 		}
-		if (pacman.done) {
+		if (pacman.done && game_on) {
 			pacman.resetBoard();
+			game_on = false;
 			$("#start").show();
+			$("#reset").hide();
 		}
 	})
 	$("#start").on("click", function() {
-		console.log("starting");
 		pacman.done = false;
+		game_on = true;
 		pacman.resetBoard();
-		pacman.gameReset();
+		pacman.gameStart();
 		$("#start").hide();
+		$("#reset").show();
 	})
 
 	$("#reset").on("click", function() {
-		console.log("reset");
 		pacman.resetBoard();
+		$("#start").show();
 	})
+	$("#submit_name").on("click", function() {
+		name = $("#user_name").val();
+		socket.emit("add_new_player", {name:name});
+		$("#display_name").text("Welcome " + name);
+		$("#display_name").show();
+		$("#start").show();
+		$("#name_input").hide();
+	})
+
 });

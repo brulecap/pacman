@@ -1,0 +1,27 @@
+		<link rel="stylesheet" href="stylesheets/pacman.css">
+		<link rel="stylesheet" href="stylesheets/board.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="js/board.js"></script>
+		<script src="js/pacman_sockets.js"></script>
+		<script src="js/pacman_characters.js"></script>
+		<script src="js/pacman.js"></script>
+		<div id="wrapper">
+			<div id="left_content">
+				<h1 id="display_name"></h1>
+				<div id="game_area">
+				</div>
+				<div id="name_input">
+					<label for="user_name">Name:</label>
+					<input type="text" id="user_name" name="user_name">
+					<button type="button" id="submit_name" class="btn btn-default">Submit</button>
+					<p>Enter name to play</p>
+				</div>
+				<button type="button" id="start" class="btn btn-success">Start</button>
+				<button type="button" id="reset" class="btn btn-danger">Reset</button>
+				<div id="messages">
+				</div>
+			</div>
+			<div id="right_content">
+			</div>
+		</div>

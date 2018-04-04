@@ -1,18 +1,22 @@
-function connect_to_server(container) {
+function connect_to_server() {
+	var socket_host = window.location.origin + window.location.pathname;
 	// Connect to server.
-	socket  = io.connect();
-	const game_container = container;
+	console.log("host name", socket_host);
+	var user_array = [];
+	socket  = io.connect(socket_host);
 	socket.on('player_update', function (data) {
-		let user_array = [];
-		for (var key in data.users) {
-			if (data.users[key] !== socket.id) {
+		for (let key in data.users) {
+			console.log("key",data.users[key], data.users[key].id);
+			if (data.users[key].id !== socket.id) {
+				console.log("New user", data.users[key].id)
 				// User is not this client. Push on array
-				if (!$("#"+data.users[key]).length) {
+				if (!$("#"+data.users[key].id).length) {
+					console.log("not added");
 					// We have not drawn this users board yet.
-					$("#right_content").append(`<div id="${data.users[key]}" class="remote"></div>`);
-					create_board(data.users[key], 8, 8, false);
+					$("#right_content").append(`<h2>${data.users[key].name}</h2><div id="${data.users[key].id}" class="remote"></div>`);
+					create_board(data.users[key].id, 8, 8);
 				}
-				user_array.push(data.users[key]);
+				user_array.push(data.users[key].id);
 			}
 		}
 		$(".remote").each(function() {

@@ -16,6 +16,7 @@ class Character {
 		this.board = board;
 		this.direction = "right";
 		this.all_transforms = "left right up down";
+		this.scared = false;
 		this.transform = "";
 		this.character = char_type;
 		this.path_out = [];
@@ -36,6 +37,8 @@ class Character {
 
 		Paramters:
 			character - pacman, one of the ghosts...
+
+		Returns: object containing x,y coordinates
 	*/
 	getPosition(character) {
 		return {x:$("#" + this.board + " ." + character).parent().index(),
@@ -43,6 +46,8 @@ class Character {
 	}
 	/*
 		This method gets the dom object of the cell where a move would take us.
+
+		Returns dom object of new cell
 	*/
 	getNewCell() {
 		let dom_identifier = "#" + this.board + " ." + this.character;
@@ -82,6 +87,7 @@ class Character {
 			(!(cell.hasClass("door")) || (this.path_out.length > 0))) {
 			return true;
 		}
+		return false;
 	}
 	/*
 		Gets cell where move would go using getNewCell and then checks if cell is a brick or door using move_okay.
@@ -90,10 +96,7 @@ class Character {
 		Paramters:
 			direction - direction of move... up, down, left, right
 
-		Returns cell if move successfull, false otherwise.
-
-		TODO: Some more convoluted code. Should be a better way to do this whole move
-		process. Clean up and make more concise... Too much going on in one method.	
+		Returns cell if move successfull, false otherwise.	
 	*/
 	move(direction) {
 		this.direction = direction;
@@ -101,6 +104,10 @@ class Character {
 		if (new_cell.length > 0) {
 			if (this.move_okay(new_cell)) {
 				// Complete move
+				if (this.scared) {
+					$("#" + this.board + " ." + this.character).removeClass("scared");
+					new_cell.addClass("scared");
+				}
 				$("#" + this.board + " ." + this.character).removeClass(this.character + " " + this.all_transforms);
 				new_cell.addClass(this.character + " " + this.transform);
 				this.checkCollision(new_cell);
@@ -113,12 +120,15 @@ class Character {
 		return false;
 	}
 	/*
-		Puts character back in it's starting position as determined by the "character name"_holder id
+		Puts character back in it's starting position as determined by the "character name"_holder class
 		defined in board.js.
 	*/
 	goHome() {
-		$("."+this.character).removeClass(this.character + " " + this.all_transforms);
-		$("#"+this.character+"_holder").addClass(this.character);
+		if (this.scared) {
+			$("#" + this.board + " ."+this.character).removeClass("scared");
+		}
+		$("#" + this.board + " ."+this.character).removeClass(this.character + " " + this.all_transforms);
+		$("#" + this.board + " ." + this.character + "_holder").addClass(this.character);
 		this.setPosition();
 	}
 	/*
@@ -130,6 +140,9 @@ class Character {
 	checkCollision(cell) {
 		let ghost = this.getGhostCell(cell);
 		if (ghost && this.isPacmanCell(cell)) {
+			// We need pacman object. "this" is either pacman or a ghost.
+			// Assume pacman is this... If this is a ghost then get pacman
+			// from ghost. 
 			let pacman = this;
 			if (this instanceof Ghost) {
 				pacman = this.pacman;
@@ -172,12 +185,14 @@ class Character {
 		return false;
 	}
 	/*
-		Uses socket.io to send info to server.
+		Send message to server.
 
-		TODO: Add parameter containing info to be sent.
+		Parameters:
+			action: string containing the action ... moved, and others to come
+			message: object containing the action data.
 	*/
-	emitServer() {
-		socket.emit("moved", {board:$("#"+this.board).html().replace(re, cell_size)});
+	emitServer(action, message) {
+		emit_to_server(action, message);
 	}
 
 }
@@ -190,6 +205,7 @@ class Pacman extends Character {
 	constructor(board) {
 		super(board, "pacman");
 		this.energized = false;
+		this.energized_timeout = false;
 		// Number of dots pacman has eaten.
 		this.dots = 0;
 		this.done = true;
@@ -197,33 +213,32 @@ class Pacman extends Character {
 	}
 	/*
 		Calls reset_board in board.js to put board in starting configuration. Then clears
-		the the move interval for ghosts and the ghost starting timeout.
+		the move interval for ghosts and the ghost starting timeout.
 
 		TODO: This whole reset/restart process is a bit convoluted. Need to clean this up
 		and make it more concise.
 	*/
 	resetBoard() {
-		reset_board();
+		reset_board(this.board);
 		for (var key in this.ghost_objects) {
+			this.ghost_objects[key].scared=false;
 			clearInterval(this.ghost_objects[key].ghost_interval);
 			clearTimeout(this.ghost_objects[key].ghost_start);
 		}
 		this.dots = 0;
 		this.setPosition(this.character);
+		this.emitServer("moved", {board:$("#"+this.board).html().replace(re, cell_size)});
 	}
-	gameReset() {
 	/*
 		Calls all ghosts goHome method which sets the start timeout for
-		each ghost. Also sends message to server of current board configuration.
-
-		TODO: See resetBoard()
+		each ghost.
 	*/
+	gameStart() {
 		let timeout = start_timeout;
 		for (var key in this.ghost_objects) {
 			this.ghost_objects[key].goHome(timeout);
 			timeout += start_timeout;
 		}
-		this.emitServer();
 	}
 
 	/*
@@ -232,8 +247,6 @@ class Pacman extends Character {
 
 		Parameters:
 			direction - direction of move(up, down, left, right)
-
-		TODO: See super.move()
 	*/
 	move(direction) {
 		this.transform = direction;
@@ -245,21 +258,35 @@ class Pacman extends Character {
 				if (new_cell.hasClass("energizer")) {
 					new_cell.removeClass("energizer");
 					this.energized = true;
-					setTimeout(this.energizedTimeout.bind(this), 10000);
+					for (var key in this.ghost_objects) {
+						$("#" + this.board + " ." + key).addClass("scared");
+						this.ghost_objects[key].scared = true;
+					}
+					if (this.energized_timeout) {
+						// pacman energized while he was alread energized... Silly dude.
+						// Cancel current timer and start new one.
+						clearInterval(this.energized_timeout);
+					}
+					this.energized_timeout = setTimeout(this.energizedTimeout.bind(this), 10000);
 				}
 				// This is checking if all the points have been eaten.
-				if ($(".game_row").find(".point").length === 0) {
+				if ($("#" + this.board + " .game_row").find(".point").length === 0) {
 					this.done = true;
 				}
 			}
 		}
-		return this.done;
+		this.emitServer("moved", {board:$("#"+this.board).html().replace(re, cell_size)});
 	}
 	/*
 		Callback method to setTimeout. Sets energized to false.
 	*/
 	energizedTimeout() {
+		this.energized_timeout = false;
 		this.energized = false;
+		for (var key in this.ghost_objects) {
+			$("#" + this.board + " ." + key).removeClass("scared");
+			this.ghost_objects[key].scared = false;
+		}
 	}	
 }
 
@@ -390,8 +417,9 @@ class Ghost extends Character {
 		if (this.pacman.done) {
 			this.pacman.resetBoard();
 			$("#start").show();
+			$("#reset").hide();
 		} else {
-			this.emitServer();
+			this.emitServer("moved", {board:$("#"+this.board).html().replace(re, cell_size)});
 		}
 		this.resetExcluded();
 		this.excludeOpposite();

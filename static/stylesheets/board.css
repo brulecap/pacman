@@ -110,11 +110,6 @@
 	transform: rotate(-90deg);
 }
 
-.pinky {
-	background: url("../images/pinky.gif") no-repeat center;
-	background-size: cover;
-}
-
 .blinky {
 	background: url("../images/blinky.gif") no-repeat center;
 	background-size: cover;
@@ -127,5 +122,15 @@
 
 .inky {
 	background: url("../images/inky.gif") no-repeat center;
+	background-size: cover;
+}
+
+.pinky {
+	background: url("../images/pinky.gif") no-repeat center;
+	background-size: cover;
+}
+
+.scared {
+	background: url("../images/scared1.gif") no-repeat center;
 	background-size: cover;
 }
