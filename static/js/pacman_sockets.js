@@ -29,7 +29,6 @@ function connect_to_server() {
 		})
 	});
 	socket.on('move', function (data) {
-		console.log("move", data.points);
 		$("#"+data.id).html(data.board);
 		$(`#points_${data.id}`).html(data.points);
 	});

@@ -67,7 +67,6 @@ $(document).ready(function(){
 		if (!name.length) {
 			$("#enter_name").addClass("text-danger");
 		} else {
-			console.log("adding new Player", name);
 			socket.emit("add_new_player", {name:name});
 			$("#display_name").html('Welcome ' + name + ' Coins: <span id="coins">0</span>');
 			$("#display_name").show();
