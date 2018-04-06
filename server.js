@@ -9,7 +9,7 @@ app.set('view engine', 'ejs');
 // set the static file location
 app.use(express.static(__dirname + "/static"));
 // root route to render the index.ejs file
-app.get("/pacman", function (request, response){
+app.get("/", function (request, response){
 	response.render('index');
 })
 const users = [];
