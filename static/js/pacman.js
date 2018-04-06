@@ -23,7 +23,6 @@ $(document).ready(function(){
 
 	socket = connect_to_server();
 	// Tell server new player joined
-//	socket.emit("add_new_player");
 
 
 	$(document).keydown(function(e) {
@@ -65,11 +64,17 @@ $(document).ready(function(){
 	})
 	$("#submit_name").on("click", function() {
 		name = $("#user_name").val();
-		socket.emit("add_new_player", {name:name});
-		$("#display_name").text("Welcome " + name);
-		$("#display_name").show();
-		$("#start").show();
-		$("#name_input").hide();
+		if (!name.length) {
+			$("#enter_name").addClass("text-danger");
+		} else {
+			console.log("adding new Player", name);
+			socket.emit("add_new_player", {name:name});
+			$("#display_name").html('Welcome ' + name + ' Coins: <span id="coins">0</span>');
+			$("#display_name").show();
+			$("#start").show();
+			$("#name_input").hide();
+			$("#enter_name").removeClass("text-danger");
+		}
 	})
 
 });

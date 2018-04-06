@@ -19,16 +19,25 @@
 #start {
 	display: none;
 	position: absolute;
-	top: 46%;
-	left: 43%;
+	top: 48%;
+	left: 45%;
 	z-index: 100;
 }
 
 #name_input {
-	margin-top: 10px;
+	position: absolute;
+	top: 36%;
+	left: 25%;
+	background-color: white;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+#display_name, .remote_header {
+	font-size: 18px;
+	text-align: center;
 }
 
 #display_name {
-	font-size: 18px;
 	display: none;
 }
