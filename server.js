@@ -27,11 +27,13 @@ io.sockets.on("connection", function (socket) {
 		// Not sure if this is the best way, but I am going to
 		// send all of the users and let the client update
 		// appropriately. 
+		console.log("adding new player", data, socket.id);
 		users.push({id:socket.id, name:data.name});
 		io.emit('player_update', {users:users});
 	})
 	socket.on("moved", function(data) {
-		socket.broadcast.emit('move', {id:socket.id, board:data.board});
+		console.log("moved", socket.id, data.points)
+		socket.broadcast.emit('move', {id:socket.id, board:data.board,points:data.points});
 	})
 	socket.on("disconnect", function (data) {
 		io.emit('remove_user', {id:socket.id});

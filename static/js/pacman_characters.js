@@ -160,7 +160,7 @@ class Character {
 		Parameters:
 			cell - the cell to check
 
-		Returns name of chracter in cell, false otherwise.
+		Returns name of character in cell, false otherwise.
 	*/
 	getGhostCell(cell) {
 		for (var key in ghost_info) {
@@ -225,9 +225,8 @@ class Pacman extends Character {
 			clearInterval(this.ghost_objects[key].ghost_interval);
 			clearTimeout(this.ghost_objects[key].ghost_start);
 		}
-		this.dots = 0;
 		this.setPosition(this.character);
-		this.emitServer("moved", {board:$("#"+this.board).html().replace(re, cell_size)});
+		this.emitServer("moved", {board:$("#"+this.board).html().replace(re, cell_size),points:this.dots});
 	}
 	/*
 		Calls all ghosts goHome method which sets the start timeout for
@@ -273,9 +272,10 @@ class Pacman extends Character {
 				if ($("#" + this.board + " .game_row").find(".point").length === 0) {
 					this.done = true;
 				}
+				$("#coins").html(this.dots);
 			}
 		}
-		this.emitServer("moved", {board:$("#"+this.board).html().replace(re, cell_size)});
+		this.emitServer("moved", {board:$("#"+this.board).html().replace(re, cell_size),points:this.dots});
 	}
 	/*
 		Callback method to setTimeout. Sets energized to false.
@@ -419,7 +419,7 @@ class Ghost extends Character {
 			$("#start").show();
 			$("#reset").hide();
 		} else {
-			this.emitServer("moved", {board:$("#"+this.board).html().replace(re, cell_size)});
+			this.emitServer("moved", {board:$("#"+this.board).html().replace(re, cell_size),points:this.pacman.dots});
 		}
 		this.resetExcluded();
 		this.excludeOpposite();
