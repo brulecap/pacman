@@ -3,6 +3,7 @@ const down_key = 40;
 const left_key = 37;
 const right_key = 39;
 const game_id = "game_area";
+const cell_size = 12;
 
 var socket;
 var game_on = false;
@@ -14,7 +15,7 @@ function emit_to_server(action, message) {
 
 
 $(document).ready(function(){
-	create_board(game_id, 16, 16);
+	create_board(game_id, cell_size, cell_size);
 	let pacman = new Pacman(game_id);
 	let points = 0;
 	for (var key in ghost_info) {
@@ -57,11 +58,6 @@ $(document).ready(function(){
 		$("#start").hide();
 		$("#reset").show();
 	})
-
-	$("#reset").on("click", function() {
-		pacman.resetBoard();
-		$("#start").show();
-	})
 	$("#submit_name").on("click", function() {
 		name = $("#user_name").val();
 		if (!name.length) {
@@ -70,10 +66,20 @@ $(document).ready(function(){
 			socket.emit("add_new_player", {name:name});
 			$("#display_name").html('Welcome ' + name + ' Coins: <span id="coins">0</span>');
 			$("#display_name").show();
+			$("#message_container").show();
 			$("#start").show();
 			$("#name_input").hide();
 			$("#enter_name").removeClass("text-danger");
 		}
 	})
-
+	$("#submit_message").on("click", function() {
+		message = $("#message").val();
+		$("#message").val("");
+		if (!message.length) {
+			console.log("No message");
+		} else {
+			console.log("message", message);
+			socket.emit("message", {message:message});
+		}
+	})
 });

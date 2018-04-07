@@ -1,7 +1,8 @@
 const move_timeout = 550;
 const start_timeout = 3000;
-const re = /16px/gi;
-const cell_size = "8px";
+console.log("Characs", cell_size);
+const re = /12px/gi;
+const remote_cell_size = "8px";
 
 
 class Character {
@@ -226,7 +227,7 @@ class Pacman extends Character {
 			clearTimeout(this.ghost_objects[key].ghost_start);
 		}
 		this.setPosition(this.character);
-		this.emitServer("moved", {board:$("#"+this.board).html().replace(re, cell_size),points:this.dots});
+		this.emitServer("moved", {board:$("#"+this.board).html().replace(re, remote_cell_size),points:this.dots});
 	}
 	/*
 		Calls all ghosts goHome method which sets the start timeout for
@@ -275,7 +276,7 @@ class Pacman extends Character {
 				$("#coins").html(this.dots);
 			}
 		}
-		this.emitServer("moved", {board:$("#"+this.board).html().replace(re, cell_size),points:this.dots});
+		this.emitServer("moved", {board:$("#"+this.board).html().replace(re, remote_cell_size),points:this.dots});
 	}
 	/*
 		Callback method to setTimeout. Sets energized to false.
@@ -419,7 +420,7 @@ class Ghost extends Character {
 			$("#start").show();
 			$("#reset").hide();
 		} else {
-			this.emitServer("moved", {board:$("#"+this.board).html().replace(re, cell_size),points:this.pacman.dots});
+			this.emitServer("moved", {board:$("#"+this.board).html().replace(re, remote_cell_size),points:this.pacman.dots});
 		}
 		this.resetExcluded();
 		this.excludeOpposite();

@@ -12,28 +12,34 @@ function connect_to_server() {
 				// User is not this client. Push on array
 				if (!$("#"+data.users[key].id).length) {
 					// We have not drawn this users board yet.
-					$("#right_content").append(`<h2 class="remote_header">${data.users[key].name} Points: <span id="points_${data.users[key].id}">0</span></h2><div id="${data.users[key].id}" class="remote"></div>`);
+					$("#right_content").append(`<h2 id="header_${data.users[key].id}" class="remote_header">${data.users[key].name} Points: <span>0</span></h2><div id="${data.users[key].id}" class="remote"></div>`);
 					create_board(data.users[key].id, 8, 8);
 					user_array.push(data.users[key].id);
 				}
 			}
 		}
-		$(".remote").each(function() {
-			// User has disconnected. Remove users board
-			if (!user_array.includes($(this).attr('id'))) {
-				// Not sure if this is working correctly... Remove console.log below 
-				// if we see that it is.
-				console.log("removing user ", this);
-				$(this).remove();
-			}
-		})
 	});
 	socket.on('move', function (data) {
 		$("#"+data.id).html(data.board);
-		$(`#points_${data.id}`).html(data.points);
+		$(`#header_${data.id} span`).html(data.points);
 	});
 	socket.on('remove_user', function (data) {
 		$('#'+data.id).remove();
+		$(`#header_${data.id}`).remove();
+		let remove_user_index = user_array.indexOf(data.id);
+		if (remove_user_index > -1) {
+			user_array.splice(remove_user_index, 1);
+			console.log("removed", data.id);
+		}
+		console.log("remove", user_array, data.id, remove_user_index);
+	});
+	socket.on('messages', function (data) {
+		let message_list = "<ul>";
+		for (let key in data.messages) {
+			message_list += `<li>${data.messages[key].name}: ${data.messages[key].message}</li>`;
+		}
+		message_list += "</ul>";
+		$("#messages").html(message_list);
 	});
 	return socket;
 }

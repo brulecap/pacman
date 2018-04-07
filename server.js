@@ -13,6 +13,8 @@ app.get("/", function (request, response){
 	response.render('index');
 })
 const users = [];
+const messages = [];
+const max_messages = 10;
 // Start Node server listening on port 8001.
 var server = app.listen(process.env.PORT || 8000, function() {
 	console.log(process.env.PORT || 8000);
@@ -20,13 +22,9 @@ var server = app.listen(process.env.PORT || 8000, function() {
 var io = require('socket.io').listen(server);
 io.sockets.on("connection", function (socket) {
 	socket.on( "add_new_player", function (data) {
-		// Update all users with all current users.
-		// I was having an issue where if a client refreshed
-		// I would end up with two copies of a remote player
-		// for the non-refreshed client. 
-		// Not sure if this is the best way, but I am going to
-		// send all of the users and let the client update
-		// appropriately.
+		/*
+			Update all clients with all current users.
+		*/
 		users.push({id:socket.id, name:data.name});
 		io.emit('player_update', {users:users});
 	})
@@ -35,22 +33,26 @@ io.sockets.on("connection", function (socket) {
 	})
 	socket.on("disconnect", function (data) {
 		io.emit('remove_user', {id:socket.id});
-		for (let i=0;i<users.length;i++) {
-			if (users.id === socket.id) {
-				console.log("Found remove", users, i);
-				users.splice(i, 1);
-			}
+		let remove_index = users.map(function(user) { return user.id; }).indexOf(socket.id);
+		if (remove_index > -1) {
+			users.splice(remove_index, 1);
 		}
 	})
 	/*
 		Not imlemented or tested.
 	*/
-	socket.on("send_message", function (data) {
+	socket.on("message", function (data) {
+		let name ="";
 		if (messages.length > max_messages) {
-			// FIFO list. Take first one off the list.
-			messages.shift();
+			// FIFO list. Objects added at index 0 so take last one off.
+			messages.splice(-1,1)
 		}
-		messages.push({name:users[socket.id], message:data.message});
-		io.emit( 'new_message', {messages:[{name:users[socket.id], message:data.message}]});
+		let user_index = users.map(function(user) { return user.id; }).indexOf(socket.id);
+		if (user_index > -1) {
+			messages.splice(0,0,{name:users[user_index].name, message:data.message});
+			io.emit( 'messages', {messages:messages});
+		} else {
+			console.log("Could not find user for the message", data.message);
+		}
 	})
 })

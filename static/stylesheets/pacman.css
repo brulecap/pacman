@@ -1,25 +1,14 @@
-#left_content {
-	position: relative;
-}
-
-#right_content {
-	vertical-align: top;
+#display_name, #message_container, #start {
+	display: none;
 }
 
 #left_content, #right_content {
-	display: inline-block;
-	margin: 20px;
-}
-
-#reset {
-	display: none;
-	margin: 20px 0 0 75px;
+	text-align: center;
 }
 
 #start {
-	display: none;
 	position: absolute;
-	top: 48%;
+	top: 40%;
 	left: 45%;
 	z-index: 100;
 }
@@ -27,17 +16,31 @@
 #name_input {
 	position: absolute;
 	top: 36%;
-	left: 25%;
+	left: 20%;
+	right: 20%;
 	background-color: white;
 	padding: 10px;
 	border-radius: 5px;
+	border: 2px solid grey;
 }
 
 #display_name, .remote_header {
 	font-size: 18px;
-	text-align: center;
 }
 
-#display_name {
-	display: none;
+#messages {
+	text-align: left;
+	overflow: auto;
+	max-height: 100px;
+	border: 1px solid black;
+}
+
+ul {
+	list-style-type: none;
+	margin: 10px;
+}
+
+li {
+	margin: 10px 2px;
+	border-bottom: 1px solid gray;
 }
