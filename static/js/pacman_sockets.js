@@ -1,8 +1,7 @@
 function connect_to_server() {
 	var socket_host = window.location.origin + window.location.pathname;
-	// Connect to server.
-	console.log("host name", socket_host);
 	var user_array = [];
+	// Connect to server.
 	var socket  = io();
 	socket.on('player_update', function (data) {
 		for (let key in data.users) {
