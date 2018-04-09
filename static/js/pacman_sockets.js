@@ -3,9 +3,7 @@ function connect_to_server() {
 	// Connect to server.
 	console.log("host name", socket_host);
 	var user_array = [];
-//	socket  = io.connect(socket_host);
-//	socket  = io.connect("http://localhost:8000");
-	var socket  = io.connectWithSession();
+	var socket  = io();
 	socket.on('player_update', function (data) {
 		for (let key in data.users) {
 			if (data.users[key].id !== socket.id) {
@@ -29,7 +27,6 @@ function connect_to_server() {
 		let remove_user_index = user_array.indexOf(data.id);
 		if (remove_user_index > -1) {
 			user_array.splice(remove_user_index, 1);
-			console.log("removed", data.id);
 		}
 		console.log("remove", user_array, data.id, remove_user_index);
 	});
