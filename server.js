@@ -27,6 +27,7 @@ io.sockets.on("connection", function (socket) {
 		*/
 		users.push({id:socket.id, name:data.name});
 		io.emit('player_update', {users:users});
+		io.emit('messages', {messages:messages});
 	})
 	socket.on("moved", function(data) {
 		socket.broadcast.emit('move', {id:socket.id, board:data.board,points:data.points});

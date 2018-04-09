@@ -5,7 +5,7 @@ function connect_to_server() {
 	var user_array = [];
 //	socket  = io.connect(socket_host);
 //	socket  = io.connect("http://localhost:8000");
-	var socket  = io();
+	var socket  = io.connectWithSession();
 	socket.on('player_update', function (data) {
 		for (let key in data.users) {
 			if (data.users[key].id !== socket.id) {

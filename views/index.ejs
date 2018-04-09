@@ -5,10 +5,46 @@
 		<meta charset="UTF-8">
 		<meta name="description" content="Pacman demo">
 		<link rel="stylesheet" type="text/css" href="stylesheets/styles.css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-			  integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link rel="stylesheet" href="stylesheets/pacman.css">
+		<link rel="stylesheet" href="stylesheets/board.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="/socket.io/socket.io-sessions.js"></script>
+		<script src="js/board.js"></script>
+		<script src="js/pacman.js"></script>
+		<script src="js/pacman_sockets.js"></script>
+		<script src="js/pacman_characters.js"></script>
 	</head>
 	<body>
-<% include ../static/html/pacman.html %>
+		<div class="page">
+			<div class="container">
+				<div class="row">
+					<div id="left_content" class="col-sm-12 col-md-6 position-relative">
+						<h1 id="display_name"></h1>
+						<div id="game_area">
+						</div>
+						<div id="name_input">
+							<p id="enter_name">Enter name to play</p>
+							<label for="user_name">Name:</label>
+							<input type="text" id="user_name" name="user_name">
+							<button type="button" id="submit_name" class="btn btn-default">Enter</button>
+						</div>
+						<button type="button" id="start" class="btn btn-success">Start</button>
+						<div id="message_container">
+							<div id="message_input">
+								<input type="text" id="message" name="message" placeholder="Enter message">
+								<button type="button" id="submit_message" class="btn btn-secondary">Send Message</button>
+							</div>
+							<div id="messages">
+								<p>No messages</p>
+							</div>
+						</div>
+					</div>
+					<div id="right_content" class="col-md-6">
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>

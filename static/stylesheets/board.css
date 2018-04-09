@@ -93,11 +93,6 @@
 	background-size: cover;
 }
 
-.pacman1 {
-	background: url("../images/pacman.gif") no-repeat center;
-	background-size: cover;
-}
-
 .down {
 	transform: rotate(90deg);
 }
@@ -131,6 +126,6 @@
 }
 
 .scared {
-	background: url("../images/scared1.gif") no-repeat center;
+	background: url("../images/scared.gif") no-repeat center;
 	background-size: cover;
 }

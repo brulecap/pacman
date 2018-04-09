@@ -1,3 +1,13 @@
+body {
+	background: url("../images/pacmanbg1.jpg");
+	background-size: cover;
+	background-repeat: repeat-y;
+}
+
+#back {
+	width:100px;
+}
+
 #display_name, #message_container, #start {
 	display: none;
 }
@@ -8,8 +18,8 @@
 
 #start {
 	position: absolute;
-	top: 40%;
-	left: 45%;
+	top: 31%;
+	left: 43%;
 	z-index: 100;
 }
 
@@ -26,13 +36,32 @@
 
 #display_name, .remote_header {
 	font-size: 18px;
+	color: #0973B2;
+}
+
+#message_container {
+	text-align: left;
 }
 
 #messages {
-	text-align: left;
 	overflow: auto;
-	max-height: 100px;
+	height: 100px;
 	border: 1px solid black;
+	margin-top: 10px;
+	background-color: white;
+	border-radius: 5px;
+	padding: 5px;
+}
+
+#message {
+	width: 100%;
+	margin: 10px 0;
+	border-radius: 5px;
+	padding: 5px;
+}
+
+#message_input button {
+	display: block;
 }
 
 ul {

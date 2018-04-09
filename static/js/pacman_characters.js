@@ -1,4 +1,5 @@
-const move_timeout = 550;
+var move_timeout = 550;
+const min_timeout = 200;
 const start_timeout = 3000;
 console.log("Characs", cell_size);
 const re = /12px/gi;
@@ -272,6 +273,11 @@ class Pacman extends Character {
 				// This is checking if all the points have been eaten.
 				if ($("#" + this.board + " .game_row").find(".point").length === 0) {
 					this.done = true;
+					// Successfully cleared the board.
+					// Let's speed the ghosts up a bit...
+					if (move_timeout > min_timeout) {
+						move_timeout -= 20;
+					}
 				}
 				$("#coins").html(this.dots);
 			}
