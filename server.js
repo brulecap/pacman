@@ -8,9 +8,30 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 // set the static file location
 app.use(express.static(__dirname + "/static"));
+// get body parser and use it
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+// setup sessions
+var Session = require('express-session');
+var session = Session({secret:'D0Imaed8ad2ppw',resave:true,saveUninitialized:true});
+app.use(session);
+
 // root route to render the index.ejs file
-app.get("/", function (request, response){
+app.get("/", function (request, response) {
+	// Set session id
+	request.session.uid = Date.now();
 	response.render('index');
+})
+// root route to render the index.ejs file
+app.get("/reset", function (request, response) {
+	// Set session id
+	request.session.destroy();
+	response.redirect('/');
+})
+app.post("/", function (request, response) {
+	// Set session name
+	request.session.name = request.body.user_name;
+	response.redirect('/');
 })
 const users = [];
 const messages = [];
@@ -19,33 +40,58 @@ const max_messages = 10;
 var server = app.listen(process.env.PORT || 8000, function() {
 	console.log(process.env.PORT || 8000);
 });
-var io = require('socket.io').listen(server);
+
+var io = require('socket.io')(server);
+
+io.use(function(socket, next) {
+  session(socket.handshake, {}, next);
+});
+
 io.sockets.on("connection", function (socket) {
+	if (socket.handshake.session.name) {
+		// Session is defined for this socket. Tell client who they are :) and give them
+		// all the users and messages.
+		socket.emit("session_restore", {name:socket.handshake.session.name});
+		socket.emit('player_update', {users:users});
+		socket.emit('messages', {messages:messages});
+		// Push new user on array.
+		users.push({id:socket.id, name:socket.handshake.session.name});
+		// Tell everyone about the new user.
+		socket.broadcast.emit('player_update', {users:[{id:socket.id, name:socket.handshake.session.name}]});
+	}
 	socket.on( "add_new_player", function (data) {
 		/*
 			Update all clients with all current users.
 		*/
-		users.push({id:socket.id, name:data.name});
-		io.emit('player_update', {users:users});
-		io.emit('messages', {messages:messages});
+		if (users.map(function(user) { return user.id; }).indexOf(socket.id) === -1) {
+			// Tell new user about everyone and all messages.
+			socket.emit('player_update', {users:users});
+			socket.emit('messages', {messages:messages});
+			// Push new user on array.
+			users.push({id:socket.id, name:data.name});
+			// Tell everyone about the new user.
+			socket.broadcast.emit('player_update', {users:[{id:socket.id, name:data.name}]});
+		} else {
+			console.log("player already exists")
+		}
 	})
 	socket.on("moved", function(data) {
 		socket.broadcast.emit('move', {id:socket.id, board:data.board,points:data.points});
 	})
 	socket.on("disconnect", function (data) {
-		io.emit('remove_user', {id:socket.id});
+		socket.broadcast.emit('remove_user', {id:socket.id});
 		let remove_index = users.map(function(user) { return user.id; }).indexOf(socket.id);
 		if (remove_index > -1) {
 			users.splice(remove_index, 1);
 		}
 	})
 	/*
-		Not imlemented or tested.
+		Handle messages.
 	*/
 	socket.on("message", function (data) {
 		let name ="";
 		if (messages.length > max_messages) {
-			// FIFO list. Objects added at index 0 so take last one off.
+			// FIFO list. Object added at index 0 so take last one off.
 			messages.splice(-1,1)
 		}
 		let user_index = users.map(function(user) { return user.id; }).indexOf(socket.id);

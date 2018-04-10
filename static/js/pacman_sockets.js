@@ -3,6 +3,15 @@ function connect_to_server() {
 	var user_array = [];
 	// Connect to server.
 	var socket  = io();
+	socket.on('session_restore', function (data) {
+		$("#display_name").html('Welcome ' + data.name + ' Coins: <span id="coins">0</span>');
+		$("#display_name").show();
+		$("#message_container").show();
+		$("#start").show();
+		$("#name_input").hide();
+		$("#enter_name").removeClass("text-danger");
+
+	});
 	socket.on('player_update', function (data) {
 		for (let key in data.users) {
 			if (data.users[key].id !== socket.id) {
@@ -27,7 +36,6 @@ function connect_to_server() {
 		if (remove_user_index > -1) {
 			user_array.splice(remove_user_index, 1);
 		}
-		console.log("remove", user_array, data.id, remove_user_index);
 	});
 	socket.on('messages', function (data) {
 		let message_list = "<ul>";

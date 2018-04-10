@@ -1,7 +1,8 @@
 var move_timeout = 550;
 const min_timeout = 200;
 const start_timeout = 3000;
-console.log("Characs", cell_size);
+// TODO: Cell size is a const in pacman.js. Need to figure out
+// the right way to pick up any changes to that const here.
 const re = /12px/gi;
 const remote_cell_size = "8px";
 

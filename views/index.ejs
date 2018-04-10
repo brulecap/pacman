@@ -24,10 +24,14 @@
 						<div id="game_area">
 						</div>
 						<div id="name_input">
-							<p id="enter_name">Enter name to play</p>
-							<label for="user_name">Name:</label>
-							<input type="text" id="user_name" name="user_name">
-							<button type="button" id="submit_name" class="btn btn-default">Enter</button>
+							<form action='/' method='post'>
+								<fieldset>
+									<legend>Enter name to play!</legend>
+									<label for="user_name">Name:</label>
+									<input type="text" id="user_name" name="user_name">
+									<input type="submit" id="submit_name" class="btn btn-default" value="Enter">
+								</fieldset>
+							</form>
 						</div>
 						<button type="button" id="start" class="btn btn-success">Start</button>
 						<div id="message_container">
@@ -35,6 +39,7 @@
 								<input type="text" id="message" name="message" placeholder="Enter message">
 								<button type="button" id="submit_message" class="btn btn-secondary">Send Message</button>
 							</div>
+							<a id="reset" class="btn btn-danger" href="/reset">Reset session</a>
 							<div id="messages">
 								<p>No messages</p>
 							</div>

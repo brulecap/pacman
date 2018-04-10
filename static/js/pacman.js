@@ -23,8 +23,6 @@ $(document).ready(function(){
 	}
 
 	socket = connect_to_server();
-	// Tell server new player joined
-
 
 	$(document).keydown(function(e) {
 		let direction = "";
@@ -63,7 +61,7 @@ $(document).ready(function(){
 		if (!name.length) {
 			$("#enter_name").addClass("text-danger");
 		} else {
-			socket.emit("add_new_player", {name:name});
+			emit_to_server("add_new_player", {name:name});
 			$("#display_name").html('Welcome ' + name + ' Coins: <span id="coins">0</span>');
 			$("#display_name").show();
 			$("#message_container").show();
@@ -75,10 +73,7 @@ $(document).ready(function(){
 	$("#submit_message").on("click", function() {
 		message = $("#message").val();
 		$("#message").val("");
-		if (!message.length) {
-			console.log("No message");
-		} else {
-			console.log("message", message);
+		if (message.length) {
 			socket.emit("message", {message:message});
 		}
 	})
