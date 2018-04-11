@@ -39,6 +39,10 @@ body {
 	color: #0973B2;
 }
 
+#name_error {
+	display: none;
+}
+
 #message_container {
 	text-align: left;
 }

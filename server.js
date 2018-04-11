@@ -15,23 +15,31 @@ app.use(bodyParser.urlencoded({ extended: true }));
 var Session = require('express-session');
 var session = Session({secret:'D0Imaed8ad2ppw',resave:true,saveUninitialized:true});
 app.use(session);
+/*
+	When running behind nginx with proxy_pass the node server
+	only "knows" itself as localhost. But the ejs templates and redirects
+	need to know the url according to the outside world. This is configured
+	in ecosystem.config.js used by pm2.
 
+	With this in place we can test as localhost on the development side and
+	minimal configuration on the deployed side.
+*/
 // root route to render the index.ejs file
 app.get("/", function (request, response) {
 	// Set session id
 	request.session.uid = Date.now();
-	response.render('index');
+	response.render('index', {baseUrl:process.env.BASE || request.protocol + '://' + request.get('host') + request.originalUrl});
 })
 // root route to render the index.ejs file
 app.get("/reset", function (request, response) {
 	// Set session id
 	request.session.destroy();
-	response.redirect('/');
+	response.redirect(process.env.BASE || '/');
 })
 app.post("/", function (request, response) {
 	// Set session name
 	request.session.name = request.body.user_name;
-	response.redirect('/');
+	response.redirect(process.env.BASE || '/');
 })
 const users = [];
 const messages = [];

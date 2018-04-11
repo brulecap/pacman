@@ -56,18 +56,11 @@ $(document).ready(function(){
 		$("#start").hide();
 		$("#reset").show();
 	})
-	$("#submit_name").on("click", function() {
+	$("#submit_name").on("click", function(e) {
 		name = $("#user_name").val();
 		if (!name.length) {
-			$("#enter_name").addClass("text-danger");
-		} else {
-			emit_to_server("add_new_player", {name:name});
-			$("#display_name").html('Welcome ' + name + ' Coins: <span id="coins">0</span>');
-			$("#display_name").show();
-			$("#message_container").show();
-			$("#start").show();
-			$("#name_input").hide();
-			$("#enter_name").removeClass("text-danger");
+			$("#name_error").show();
+			e.preventDefault();
 		}
 	})
 	$("#submit_message").on("click", function() {

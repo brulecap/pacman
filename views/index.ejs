@@ -16,6 +16,7 @@
 		<script src="js/pacman_characters.js"></script>
 	</head>
 	<body>
+		<p><%= baseUrl %></p>
 		<div class="page">
 			<div class="container">
 				<div class="row">
@@ -24,7 +25,7 @@
 						<div id="game_area">
 						</div>
 						<div id="name_input">
-							<form action='/' method='post'>
+							<form action='<%= baseUrl %>' method='post'>
 								<fieldset>
 									<legend>Enter name to play!</legend>
 									<label for="user_name">Name:</label>
@@ -32,6 +33,7 @@
 									<input type="submit" id="submit_name" class="btn btn-default" value="Enter">
 								</fieldset>
 							</form>
+							<p id="name_error" class="text-danger">Name is required to play.</p>
 						</div>
 						<button type="button" id="start" class="btn btn-success">Start</button>
 						<div id="message_container">
@@ -39,7 +41,7 @@
 								<input type="text" id="message" name="message" placeholder="Enter message">
 								<button type="button" id="submit_message" class="btn btn-secondary">Send Message</button>
 							</div>
-							<a id="reset" class="btn btn-danger" href="/reset">Reset session</a>
+							<a id="reset" class="btn btn-danger" href="<%= baseUrl %>/reset">Reset session</a>
 							<div id="messages">
 								<p>No messages</p>
 							</div>
