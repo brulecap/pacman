@@ -39,6 +39,7 @@ app.get("/reset", function (request, response) {
 app.post("/", function (request, response) {
 	// Set session name
 	request.session.name = request.body.user_name;
+	request.session.points = 0;
 	response.redirect(process.env.BASE || '/');
 })
 const users = [];
@@ -59,13 +60,13 @@ io.sockets.on("connection", function (socket) {
 	if (socket.handshake.session.name) {
 		// Session is defined for this socket. Tell client who they are :) and give them
 		// all the users and messages.
-		socket.emit("session_restore", {name:socket.handshake.session.name});
+		socket.emit("session_restore", {name:socket.handshake.session.name, points:socket.handshake.session.points});
 		socket.emit('player_update', {users:users});
 		socket.emit('messages', {messages:messages});
 		// Push new user on array.
-		users.push({id:socket.id, name:socket.handshake.session.name});
+		users.push({id:socket.id,name:socket.handshake.session.name,points:socket.handshake.session.points});
 		// Tell everyone about the new user.
-		socket.broadcast.emit('player_update', {users:[{id:socket.id, name:socket.handshake.session.name}]});
+		socket.broadcast.emit('player_update', {users:[{id:socket.id,name:socket.handshake.session.name,points:socket.handshake.session.points}]});
 	}
 	socket.on( "add_new_player", function (data) {
 		/*
@@ -78,12 +79,13 @@ io.sockets.on("connection", function (socket) {
 			// Push new user on array.
 			users.push({id:socket.id, name:data.name});
 			// Tell everyone about the new user.
-			socket.broadcast.emit('player_update', {users:[{id:socket.id, name:data.name}]});
+			socket.broadcast.emit('player_update', {users:[{id:socket.id, name:data.name, points:data.points}]});
 		} else {
 			console.log("player already exists")
 		}
 	})
 	socket.on("moved", function(data) {
+		socket.handshake.session.points = data.points;
 		socket.broadcast.emit('move', {id:socket.id, board:data.board,points:data.points});
 	})
 	socket.on("disconnect", function (data) {

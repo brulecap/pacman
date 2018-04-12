@@ -71,6 +71,10 @@ const ghost_info = {'pinky':['up','right','up','up'],
 				  'clyde':['up','up','up'],
 				  'inky':['up','left','up','up']};
 
+
+const remote_cell_size = 6;
+const cell_size = 10;
+
 /*
 	Calls create_board_html to... Yup create the board html.
 	Then set css properties width and height on both the board

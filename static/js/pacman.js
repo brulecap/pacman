@@ -3,7 +3,6 @@ const down_key = 40;
 const left_key = 37;
 const right_key = 39;
 const game_id = "game_area";
-const cell_size = 12;
 
 var socket;
 var game_on = false;

@@ -4,22 +4,14 @@ body {
 	background-repeat: repeat-y;
 }
 
-#back {
-	width:100px;
-}
-
-#display_name, #message_container, #start {
-	display: none;
-}
-
-#left_content, #right_content {
+#user_content, #remote_content {
 	text-align: center;
 }
 
 #start {
 	position: absolute;
-	top: 31%;
-	left: 43%;
+	top: 46%;
+	left: 45%;
 	z-index: 100;
 }
 
@@ -34,7 +26,7 @@ body {
 	border: 2px solid grey;
 }
 
-#display_name, .remote_header {
+#display_name, .remote_header, #message_container h1 {
 	font-size: 18px;
 	color: #0973B2;
 }
@@ -49,7 +41,7 @@ body {
 
 #messages {
 	overflow: auto;
-	height: 100px;
+	height: 205px;
 	border: 1px solid black;
 	margin-top: 10px;
 	background-color: white;
@@ -68,12 +60,28 @@ body {
 	display: inline-block;
 }
 
+#reset {
+	margin-top: 5px;
+}
+
+/* Styles on bootstrap classes */
+.container {
+	display: none;
+}
+
+.row {
+	margin-top: 25px;
+}
+/* End bootstrap */
+
+.odd {
+	background-color: lightgrey;
+}
+
 ul {
 	list-style-type: none;
-	margin: 10px;
 }
 
 li {
-	margin: 10px 2px;
-	border-bottom: 1px solid gray;
+	padding: 5px;
 }

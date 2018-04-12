@@ -4,22 +4,19 @@ function connect_to_server() {
 	// Connect to server.
 	var socket  = io();
 	socket.on('session_restore', function (data) {
-		$("#display_name").html('Welcome ' + data.name + ' Coins: <span id="coins">0</span>');
-		$("#display_name").show();
-		$("#message_container").show();
-		$("#start").show();
+		$(".container").show();
+		$("#display_name").html(`Welcome ${data.name} Coins: <span id="coins">${data.points}</span>`);
 		$("#name_input").hide();
-		$("#enter_name").removeClass("text-danger");
 
 	});
 	socket.on('player_update', function (data) {
 		for (let key in data.users) {
 			if (data.users[key].id !== socket.id) {
 				// User is not this client. Push on array
-				if (!$("#"+data.users[key].id).length) {
+				if (!$(`#${data.users[key].id}`).length) {
 					// We have not drawn this users board yet.
-					$("#right_content").append(`<h2 id="header_${data.users[key].id}" class="remote_header">${data.users[key].name} Points: <span>0</span></h2><div id="${data.users[key].id}" class="remote"></div>`);
-					create_board(data.users[key].id, 8, 8);
+					$("#remote_content").append(`<div class="col-sm-6 col-md-4"><h2 id="header_${data.users[key].id}" class="remote_header">${data.users[key].name} Points: <span>0</span></h2><div id="${data.users[key].id}" class="remote"></div></div>`);
+					create_board(data.users[key].id, remote_cell_size, remote_cell_size);
 					user_array.push(data.users[key].id);
 				}
 			}
@@ -30,7 +27,7 @@ function connect_to_server() {
 		$(`#header_${data.id} span`).html(data.points);
 	});
 	socket.on('remove_user', function (data) {
-		$('#'+data.id).remove();
+		$(`#${data.id}`).remove();
 		$(`#header_${data.id}`).remove();
 		let remove_user_index = user_array.indexOf(data.id);
 		if (remove_user_index > -1) {
@@ -38,12 +35,15 @@ function connect_to_server() {
 		}
 	});
 	socket.on('messages', function (data) {
-		let message_list = "<ul>";
-		for (let key in data.messages) {
-			message_list += `<li>${data.messages[key].name}: ${data.messages[key].message}</li>`;
+		let message_list = "";
+		if (data.messages.length === 0) {
+			message_list = "<li>No messages yet</li>";
+		} else {
+			for (const [i, message] of data.messages.entries()) {
+				message_list += `<li${i%2?' class="odd"':''}>${message.name}: ${message.message}</li>`;
+			}
 		}
-		message_list += "</ul>";
-		$("#messages").html(message_list);
+		$("#messages ul").html(message_list);
 	});
 	return socket;
 }

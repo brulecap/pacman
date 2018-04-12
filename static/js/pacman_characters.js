@@ -1,11 +1,7 @@
 var move_timeout = 550;
 const min_timeout = 200;
 const start_timeout = 3000;
-// TODO: Cell size is a const in pacman.js. Need to figure out
-// the right way to pick up any changes to that const here.
-const re = /12px/gi;
-const remote_cell_size = "8px";
-
+const regex = new RegExp(`${cell_size}px`,"gi");
 
 class Character {
 	/*
@@ -229,7 +225,7 @@ class Pacman extends Character {
 			clearTimeout(this.ghost_objects[key].ghost_start);
 		}
 		this.setPosition(this.character);
-		this.emitServer("moved", {board:$("#"+this.board).html().replace(re, remote_cell_size),points:this.dots});
+		this.emitServer("moved", {board:$("#"+this.board).html().replace(regex, `${remote_cell_size}px`),points:this.dots});
 	}
 	/*
 		Calls all ghosts goHome method which sets the start timeout for
@@ -283,7 +279,7 @@ class Pacman extends Character {
 				$("#coins").html(this.dots);
 			}
 		}
-		this.emitServer("moved", {board:$("#"+this.board).html().replace(re, remote_cell_size),points:this.dots});
+		this.emitServer("moved", {board:$("#"+this.board).html().replace(regex, `${remote_cell_size}px`),points:this.dots});
 	}
 	/*
 		Callback method to setTimeout. Sets energized to false.
@@ -427,7 +423,7 @@ class Ghost extends Character {
 			$("#start").show();
 			$("#reset").hide();
 		} else {
-			this.emitServer("moved", {board:$("#"+this.board).html().replace(re, remote_cell_size),points:this.pacman.dots});
+			this.emitServer("moved", {board:$("#"+this.board).html().replace(regex,`${remote_cell_size}px`),points:this.pacman.dots});
 		}
 		this.resetExcluded();
 		this.excludeOpposite();
