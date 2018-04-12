@@ -82,12 +82,12 @@ const cell_size = 10;
 */
 function create_board(id, width, height) {
 	// dom object of whole board
-	let board_dom_object = $("#"+id);
+	let board_dom_object = $(`#${id}`);
 	// dom object of all divs(cells) in the board.
 	board_dom_object.css("width", width*game_board[0].length);
 	board_dom_object.css("height", height*game_board.length);
 	board_dom_object.html(create_board_html());
-	let board_div_dom_object = $("#"+id+" .game_row div");
+	let board_div_dom_object = $(`#${id} .game_row div`);
 	board_div_dom_object.css("width", width);
 	board_div_dom_object.css("height", height);	
 }
@@ -111,7 +111,7 @@ function create_board_html() {
 	for (var i=0; i<game_board.length; i++) {
 		board_html += '<div class="game_row">';
 		for (var j=0; j<game_board[i].length; j++) {
-			board_html += '<div ' + brick_type[game_board[i][j]] + '></div>';
+			board_html += `<div ${brick_type[game_board[i][j]]}></div>`;
 		}
 		board_html += '</div>';
 	}
@@ -122,17 +122,23 @@ function create_board_html() {
 	place and repopulates coins.
 */
 function reset_board(board) {
-	$("#" + board + " .energizer_holder").addClass("energizer point");
-	$("#" + board + " .coin_holder").addClass("point");
-	$("#" + board + " .pacman").removeClass("pacman");
-	$("#" + board + " .pacman_holder").addClass("pacman");
-	$("#" + board + " .pinky").removeClass("pinky");
-	$("#" + board + " .pinky_holder").addClass("pinky");
-	$("#" + board + " .clyde").removeClass("clyde");
-	$("#" + board + " .clyde_holder").addClass("clyde");
-	$("#" + board + " .blinky").removeClass("blinky");
-	$("#" + board + " .blinky_holder").addClass("blinky");
-	$("#" + board + " .inky").removeClass("inky");
-	$("#" + board + " .inky_holder").addClass("inky");
-	$("#" + board + " .scared").removeClass("scared");	
+	$(`#${board} .energizer_holder`).addClass("energizer point");
+	$(`#${board} .coin_holder`).addClass("point");
+	$(`#${board} .pacman`).removeClass("pacman");
+	$(`#${board} .pacman_holder`).addClass("pacman");
+	$(`#${board} .pinky`).removeClass("pinky");
+	$(`#${board} .pinky_holder`).addClass("pinky");
+	$(`#${board} .clyde`).removeClass("clyde");
+	$(`#${board} .clyde_holder`).addClass("clyde");
+	$(`#${board} .blinky`).removeClass("blinky");
+	$(`#${board} .blinky_holder`).addClass("blinky");
+	$(`#${board} .inky`).removeClass("inky");
+	$(`#${board} .inky_holder`).addClass("inky");
+	$(`#${board} .scared`).removeClass("scared");	
+}
+/*
+	getter type function returning the board width
+*/
+function get_board_width(cell_size) {
+	return cell_size*game_board[0].length;
 }

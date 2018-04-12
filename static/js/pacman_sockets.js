@@ -5,7 +5,8 @@ function connect_to_server() {
 	var socket  = io();
 	socket.on('session_restore', function (data) {
 		$(".container").show();
-		$("#display_name").html(`Welcome ${data.name} Coins: <span id="coins">${data.points}</span>`);
+		$("#display_name").html(data.name);
+		$("#coins").html(data.points);
 		$("#name_input").hide();
 
 	});
@@ -15,15 +16,16 @@ function connect_to_server() {
 				// User is not this client. Push on array
 				if (!$(`#${data.users[key].id}`).length) {
 					// We have not drawn this users board yet.
-					$("#remote_content").append(`<div class="col-sm-6 col-md-4"><h2 id="header_${data.users[key].id}" class="remote_header">${data.users[key].name} Points: <span>0</span></h2><div id="${data.users[key].id}" class="remote"></div></div>`);
+					$("#remote_content").append(`<div class="remote_game col-sm-6 col-md-4"><h2 id="header_${data.users[key].id}" class="remote_header">${data.users[key].name} Score: <span>0</span></h2><div id="${data.users[key].id}" class="remote"></div></div>`);
 					create_board(data.users[key].id, remote_cell_size, remote_cell_size);
+					$(".remote_header").css("width", get_board_width(remote_cell_size));
 					user_array.push(data.users[key].id);
 				}
 			}
 		}
 	});
 	socket.on('move', function (data) {
-		$("#"+data.id).html(data.board);
+		$(`#${data.id}`).html(data.board);
 		$(`#header_${data.id} span`).html(data.points);
 	});
 	socket.on('remove_user', function (data) {

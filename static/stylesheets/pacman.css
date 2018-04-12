@@ -15,6 +15,18 @@ body {
 	z-index: 100;
 }
 
+#game_top {
+	margin: 0 auto;
+	background-color: black;
+}
+
+#game_top h2 {
+	margin: 0;
+	display:inline-block;
+	width: 40%;
+	text-align: right;
+}
+
 #name_input {
 	position: absolute;
 	top: 36%;
@@ -26,9 +38,19 @@ body {
 	border: 2px solid grey;
 }
 
-#display_name, .remote_header, #message_container h1 {
+#display_name, .remote_header, h2 {
 	font-size: 18px;
-	color: #0973B2;
+	color: white;
+	font-weight: normal;
+}
+
+.remote_header {
+	background-color: black;
+	margin: 0 auto;
+}
+
+.remote_game {
+	margin-bottom: 10px;
 }
 
 #name_error {

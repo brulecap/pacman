@@ -15,6 +15,7 @@ function emit_to_server(action, message) {
 
 $(document).ready(function(){
 	create_board(game_id, cell_size, cell_size);
+	$("#game_top").css("width", get_board_width(cell_size));
 	let pacman = new Pacman(game_id);
 	let points = 0;
 	for (var key in ghost_info) {

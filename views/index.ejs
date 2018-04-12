@@ -31,14 +31,17 @@
 			<div class="container">
 				<div class="row">
 					<div id="user_content" class="col-sm-12 col-md-6 position-relative">
-						<h1 id="display_name"></h1>
+						<div id="game_top">
+							<h2><span id="display_name">0</span></h2>
+							<h2>Score: <span id="coins">0</span></h2>
+						</div>
 						<div id="game_area">
 						</div>
-						<button type="button" id="start" class="btn btn-success">Start</button>
+						<button type="button" id="start" class="btn btn-default">GO</button>
 						<a id="reset" class="btn btn-danger" href="<%= baseUrl %>reset">Reset session</a>
 					</div>
 					<div id="message_container" class="col-sm-12 col-md-6">
-						<h1>Message center</h1> 
+						<h2>Message center</h2> 
 						<div id="message_input">
 							<input type="text" id="message" name="message" placeholder="Enter message">
 							<button type="button" id="submit_message" class="btn btn-secondary">Send Message</button>

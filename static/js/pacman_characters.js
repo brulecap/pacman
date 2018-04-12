@@ -28,8 +28,8 @@ class Character {
 			character - pacman, one of the ghosts...
 	*/
 	setPosition(character) {
-		this.x = $("#" + this.board + " ." + character).parent().index();
-		this.y = $("#" + this.board + " ." + character).index();
+		this.x = $(`#${this.board} .${character}`).parent().index();
+		this.y = $(`#${this.board} .${character}`).index();
 	}
 	/*
 		Gets x, y coordinate of character.
@@ -40,8 +40,8 @@ class Character {
 		Returns: object containing x,y coordinates
 	*/
 	getPosition(character) {
-		return {x:$("#" + this.board + " ." + character).parent().index(),
-				y:$("#" + this.board + " ." + character).index()};
+		return {x:$(`#${this.board} .${character}`).parent().index(),
+				y:$(`#${this.board} .${character}`).index()};
 	}
 	/*
 		This method gets the dom object of the cell where a move would take us.
