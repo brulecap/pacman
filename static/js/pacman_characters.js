@@ -49,7 +49,7 @@ class Character {
 		Returns dom object of new cell
 	*/
 	getNewCell() {
-		let dom_identifier = "#" + this.board + " ." + this.character;
+		let dom_identifier = `#${this.board} .${this.character}`;
 		let new_cell = "";
 		if (this.direction === "left") {
 			new_cell = $(dom_identifier).prev();
@@ -104,11 +104,13 @@ class Character {
 			if (this.move_okay(new_cell)) {
 				// Complete move
 				if (this.scared) {
-					$("#" + this.board + " ." + this.character).removeClass("scared");
+					if ((this instanceof Ghost) && this.alone($(`#${this.board} .${this.character}`))) {
+						$(`#${this.board} .${this.character}`).removeClass("scared");
+					}
 					new_cell.addClass("scared");
 				}
-				$("#" + this.board + " ." + this.character).removeClass(this.character + " " + this.all_transforms);
-				new_cell.addClass(this.character + " " + this.transform);
+				$(`#${this.board} .${this.character}`).removeClass(`${this.character} ${this.all_transforms}`);
+				new_cell.addClass(`${this.character} ${this.transform}`);
 				this.checkCollision(new_cell);
 				this.setPosition(this.character);
 				return new_cell;
@@ -124,10 +126,11 @@ class Character {
 	*/
 	goHome() {
 		if (this.scared) {
-			$("#" + this.board + " ."+this.character).removeClass("scared");
+			$(`#${this.board} .${this.character}`).removeClass("scared");
+			$(`#${this.board} .${this.character}_holder`).addClass("scared");
 		}
-		$("#" + this.board + " ."+this.character).removeClass(this.character + " " + this.all_transforms);
-		$("#" + this.board + " ." + this.character + "_holder").addClass(this.character);
+		$(`#${this.board} .${this.character}`).removeClass(`${this.character} ${this.all_transforms}`);
+		$(`#${this.board} .${this.character}_holder`).addClass(this.character);
 		this.setPosition();
 	}
 	/*
@@ -225,14 +228,14 @@ class Pacman extends Character {
 			clearTimeout(this.ghost_objects[key].ghost_start);
 		}
 		this.setPosition(this.character);
-		this.emitServer("moved", {board:$("#"+this.board).html().replace(regex, `${remote_cell_size}px`),points:this.dots});
+		this.emitServer("moved", {board:$(`#${this.board}`).html().replace(regex, `${remote_cell_size}px`),points:this.dots});
 	}
 	/*
 		Calls all ghosts goHome method which sets the start timeout for
 		each ghost.
 	*/
 	gameStart() {
-		let timeout = start_timeout;
+		let timeout = start_timeout; 
 		for (var key in this.ghost_objects) {
 			this.ghost_objects[key].goHome(timeout);
 			timeout += start_timeout;
@@ -257,7 +260,7 @@ class Pacman extends Character {
 					new_cell.removeClass("energizer");
 					this.energized = true;
 					for (var key in this.ghost_objects) {
-						$("#" + this.board + " ." + key).addClass("scared");
+						$(`#${this.board} .${key}`).addClass("scared");
 						this.ghost_objects[key].scared = true;
 					}
 					if (this.energized_timeout) {
@@ -268,7 +271,7 @@ class Pacman extends Character {
 					this.energized_timeout = setTimeout(this.energizedTimeout.bind(this), 10000);
 				}
 				// This is checking if all the points have been eaten.
-				if ($("#" + this.board + " .game_row").find(".point").length === 0) {
+				if ($(`#${this.board} .game_row`).find(".point").length === 0) {
 					this.done = true;
 					// Successfully cleared the board.
 					// Let's speed the ghosts up a bit...
@@ -279,7 +282,7 @@ class Pacman extends Character {
 				$("#coins").html(this.dots);
 			}
 		}
-		this.emitServer("moved", {board:$("#"+this.board).html().replace(regex, `${remote_cell_size}px`),points:this.dots});
+		this.emitServer("moved", {board:$(`#${this.board}`).html().replace(regex, `${remote_cell_size}px`),points:this.dots});
 	}
 	/*
 		Callback method to setTimeout. Sets energized to false.
@@ -288,7 +291,7 @@ class Pacman extends Character {
 		this.energized_timeout = false;
 		this.energized = false;
 		for (var key in this.ghost_objects) {
-			$("#" + this.board + " ." + key).removeClass("scared");
+			$(`#${this.board} .${key}`).removeClass("scared");
 			this.ghost_objects[key].scared = false;
 		}
 	}	
@@ -348,7 +351,7 @@ class Ghost extends Character {
 
 		Returns direction or false if a "smart" direction is not available.
 
-		TODO: Not very. Better way?
+		TODO: Not very elegant. Better way?
 	*/
 	smart_move() {
 		let pacman_position = this.getPosition("pacman");
@@ -423,7 +426,7 @@ class Ghost extends Character {
 			$("#start").show();
 			$("#reset").hide();
 		} else {
-			this.emitServer("moved", {board:$("#"+this.board).html().replace(regex,`${remote_cell_size}px`),points:this.pacman.dots});
+			this.emitServer("moved", {board:$(`#${this.board}`).html().replace(regex,`${remote_cell_size}px`),points:this.pacman.dots});
 		}
 		this.resetExcluded();
 		this.excludeOpposite();
@@ -484,5 +487,18 @@ class Ghost extends Character {
 	*/
 	resetPathOut() {
 		this.path_out = ghost_info[this.character].slice();
+	}
+	/*
+		Checks is there is another ghost in the cell.
+
+		Returns boolean - false if another ghost occupies the cell, false otherwise
+	*/
+	alone(cell) {
+		for (var key in ghost_info) {
+			if ((cell.hasClass(key)) && this.character !== key) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
