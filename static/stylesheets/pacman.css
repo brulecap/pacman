@@ -1,7 +1,8 @@
 body {
-	background: url("../images/pacmanbg1.jpg");
+	background: url("../images/pac_bg.png");
 	background-size: cover;
 	background-repeat: repeat-y;
+	background-color: #58595B;
 }
 
 #user_content, #remote_content {
