@@ -13,3 +13,7 @@ body {
 	margin: 0 auto;
 }
 
+a, a:hover {
+	color: #FFBE00;
+	margin-left: 10px;
+}
