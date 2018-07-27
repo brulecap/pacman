@@ -45,7 +45,7 @@ app.post("/", function (request, response) {
 const users = [];
 const messages = [];
 const max_messages = 10;
-// Start Node server listening on port 8001.
+// Start Node server listening on port specified by environment variable if defined, port 8000 otherwise.
 var server = app.listen(process.env.PORT || 8000, function() {
 	console.log(process.env.PORT || 8000);
 });
