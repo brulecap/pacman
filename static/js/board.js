@@ -142,3 +142,16 @@ function reset_board(board) {
 function get_board_width(cell_size) {
 	return cell_size*game_board[0].length;
 }
+
+$(document).ready(function(){
+	$("#info_icon").click(function(e) {
+		let testX = e.pageX + "px";
+		let testY = e.pageY + "px";
+		$("#info").css({'top':e.pageY ,'left':e.pageX}).fadeIn('slow');
+	});
+	$(".close").click(function(e) {
+		$(this).parent().fadeOut('slow');
+		console.log("fadeout");
+//		$("#info").fadeOut('slow');
+	});
+})

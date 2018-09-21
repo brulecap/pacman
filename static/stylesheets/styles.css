@@ -17,3 +17,36 @@ a, a:hover {
 	color: #FFBE00;
 	margin-left: 10px;
 }
+
+#info {
+	display: none;
+	position: absolute;
+	background-color: white;
+	border-radius: 25px;
+	border: 1px solid black;
+	padding: 10px 10px 0 10px;
+	z-index: 101;
+	max-width: 400px;
+
+}
+
+#info h2 {
+	color: #FFBE00;
+	text-align: left;
+}
+
+.close {
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    color: black;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover, .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}

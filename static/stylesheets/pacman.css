@@ -16,9 +16,10 @@ body {
 	z-index: 100;
 }
 
-#game_top {
+#game_top, .remote_header {
 	margin: 0 auto;
 	background-color: black;
+	border-radius: 10px 10px 0 0;
 }
 
 #game_top h2 {
@@ -43,11 +44,6 @@ body {
 	font-size: 18px;
 	color: white;
 	font-weight: normal;
-}
-
-.remote_header {
-	background-color: black;
-	margin: 0 auto;
 }
 
 .remote_game {

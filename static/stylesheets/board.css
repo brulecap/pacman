@@ -3,6 +3,7 @@
 	margin: 0 auto;
 	font-size: 0;
 	background-color: black;
+	border-radius: 0 0 10px 10px;
 }
 
 #game_area {
@@ -128,4 +129,9 @@
 .scared {
 	background: url("../images/scared.gif") no-repeat center;
 	background-size: cover;
+}
+
+#info_icon {
+	color: blue;
+	cursor: pointer;
 }
