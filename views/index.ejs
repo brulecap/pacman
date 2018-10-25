@@ -27,11 +27,13 @@
 			<p>Click the "Reset session" button to start over again with a new user. You will be asked to enter another user name.</p> 
 		</div>
 		<div class="page">
+			<% if (homeURL) { %>
 			<div id="sideNav">
 				<nav>
-					<a href="https://brucelecaptain.com">Back to<img alt="Bruce" src="images/bruce_sign.png" width="100"></a>
+					<a href="<%= homeURL %>">Back to<img alt="Bruce" src="images/bruce_sign.png" width="100"></a>
 				</nav>
 			</div>
+			<% } %>
 			<div id="name_input">
 				<form action='<%= baseUrl %>' method='post'>
 					<fieldset>

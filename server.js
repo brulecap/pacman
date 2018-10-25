@@ -28,7 +28,8 @@ app.use(session);
 app.get("/", function (request, response) {
 	// Set session id
 	request.session.uid = Date.now();
-	response.render('index', {baseUrl:process.env.BASE || request.protocol + '://' + request.get('host') + request.originalUrl});
+	// homeURL allows us to set a "Home" link on page. If not defined the link won't show.
+	response.render('index', {baseUrl:process.env.BASE || request.protocol + '://' + request.get('host') + request.originalUrl, homeURL:process.env.BASE});
 })
 // root route to render the index.ejs file
 app.get("/reset", function (request, response) {
