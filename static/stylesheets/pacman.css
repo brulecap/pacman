@@ -2,7 +2,7 @@ body {
 	background: url("../images/pac_bg.png");
 	background-size: cover;
 	background-repeat: repeat-y;
-	background-color: #58595B;
+	background-color: black;
 }
 
 #user_content, #remote_content {
